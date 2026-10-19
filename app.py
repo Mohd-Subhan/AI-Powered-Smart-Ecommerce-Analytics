@@ -155,7 +155,15 @@ st.sidebar.subheader("MongoDB Atlas Connection")
 # The existing URI comes from the .env file.
 # The password-masked field allows an optional override.
 
+# Read MongoDB URI from local environment first.
 default_uri = os.getenv("MONGO_URI", "")
+
+# If not available, read it from Streamlit Cloud secrets.
+if not default_uri:
+    try:
+        default_uri = st.secrets["MONGO_URI"]
+    except Exception:
+        default_uri = ""
 
 mongo_uri = st.sidebar.text_input(
     "MongoDB Connection String",
